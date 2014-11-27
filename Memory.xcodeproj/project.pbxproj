@@ -13,6 +13,7 @@
 		2B007D0E1A20D82500EF3074 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B007D0D1A20D82500EF3074 /* Images.xcassets */; };
 		2B007D111A20D82500EF3074 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2B007D0F1A20D82500EF3074 /* LaunchScreen.xib */; };
 		2B007D1D1A20D82500EF3074 /* MemoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B007D1C1A20D82500EF3074 /* MemoryTests.swift */; };
+		2B007D291A27675000EF3074 /* MemoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B007D281A27675000EF3074 /* MemoryItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		2B007D161A20D82500EF3074 /* MemoryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemoryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B007D1B1A20D82500EF3074 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B007D1C1A20D82500EF3074 /* MemoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryTests.swift; sourceTree = "<group>"; };
+		2B007D281A27675000EF3074 /* MemoryItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryItem.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 		2B007D031A20D82500EF3074 /* Memory */ = {
 			isa = PBXGroup;
 			children = (
+				2B007D281A27675000EF3074 /* MemoryItem.swift */,
 				2B007D061A20D82500EF3074 /* AppDelegate.swift */,
 				2B007D081A20D82500EF3074 /* ViewController.swift */,
 				2B007D0A1A20D82500EF3074 /* Main.storyboard */,
@@ -214,6 +217,7 @@
 			files = (
 				2B007D091A20D82500EF3074 /* ViewController.swift in Sources */,
 				2B007D071A20D82500EF3074 /* AppDelegate.swift in Sources */,
+				2B007D291A27675000EF3074 /* MemoryItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +343,7 @@
 				INFOPLIST_FILE = Memory/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -349,6 +354,7 @@
 				INFOPLIST_FILE = Memory/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
