@@ -10,11 +10,13 @@ import UIKit
 
 class ViewController: UIViewController {
 
-//    let nPairs = 6 //Number of Memory Pairs (Images)
     var cards : [MemoryItem] = []
     var openedCardIndex : Int?
     var nPairsFound = 0
     var moves = 0
+    var timestamp = NSDate()
+    var firstCard = true
+    
     @IBOutlet var buttons: [UIButton]!
     @IBOutlet weak var movesLabel: UILabel!
     
@@ -40,6 +42,10 @@ class ViewController: UIViewController {
     @IBAction func buttonSelect(sender: UIButton) {
         assert(sender.tag < cards.count, "Fewer cards than buttons")
         if sender.tag < cards.count && openedCardIndex != sender.tag && cards[sender.tag].matched == false {
+            if firstCard {
+                timestamp = NSDate()
+            }
+            
             let card = cards[sender.tag]
 
             if openedCardIndex == nil {
@@ -49,7 +55,6 @@ class ViewController: UIViewController {
                         buttons[i].setBackgroundImage(UIImage(named: "CardBackground"), forState: UIControlState.Normal)
                     }
                 }
-                //increment number of moves
                 moves++
                 movesLabel.text = String(moves)
             }
@@ -59,10 +64,11 @@ class ViewController: UIViewController {
                 openedCardIndex = sender.tag
             } else { //two cards open
                 if card == cards[openedCardIndex!] {
+                    let completionTime = timestamp.timeIntervalSinceNow //NOT DONE YET; nice improvement: display completion time while game is running
                     card.matched = true
                     nPairsFound++
                     if nPairsFound == cards.count/2 {
-                        let winningAlert = UIAlertController(title: "Congratulations", message: "You won. Moves: \(moves)", preferredStyle: UIAlertControllerStyle.Alert)
+                        let winningAlert = UIAlertController(title: "Congratulations", message: "You won. Moves: \(moves) Completion Time: \(completionTime)", preferredStyle: UIAlertControllerStyle.Alert)
                         winningAlert.addAction(UIAlertAction(title: "New Game", style: UIAlertActionStyle.Default, handler: { action in
                             self.newGame()
                             }))
@@ -82,12 +88,12 @@ class ViewController: UIViewController {
         
         var shuffledCards : [MemoryItem] = []
         
-        let nCards = cards.count
-        for (var i = 0; i < nCards; i++) { //improve: while still elements in cards array
+        do {
             let randomNumber = Int(arc4random_uniform(UInt32(cards.count-1)))
             shuffledCards.append(cards[randomNumber])
             cards.removeAtIndex(randomNumber)
-        }
+        } while cards.count > 0
+        
         cards = shuffledCards
     }
     
