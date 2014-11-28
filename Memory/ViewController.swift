@@ -10,12 +10,13 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    let nPairs = 6 //Number of Memory Pairs (Images)
+//    let nPairs = 6 //Number of Memory Pairs (Images)
     var cards : [MemoryItem] = []
     var openedCardIndex : Int?
     var nPairsFound = 0
-    var pairFound = false
+    var moves = 0
     @IBOutlet var buttons: [UIButton]!
+    @IBOutlet weak var movesLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +29,7 @@ class ViewController: UIViewController {
             cards.append(item)
         }
         shuffle()
+        movesLabel.text = String(moves)
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,7 +39,7 @@ class ViewController: UIViewController {
 
     @IBAction func buttonSelect(sender: UIButton) {
         assert(sender.tag < cards.count, "Fewer cards than buttons")
-        if sender.tag < cards.count {
+        if sender.tag < cards.count && openedCardIndex != sender.tag && cards[sender.tag].matched == false {
             let card = cards[sender.tag]
 
             if openedCardIndex == nil {
@@ -47,6 +49,9 @@ class ViewController: UIViewController {
                         buttons[i].setBackgroundImage(UIImage(named: "CardBackground"), forState: UIControlState.Normal)
                     }
                 }
+                //increment number of moves
+                moves++
+                movesLabel.text = String(moves)
             }
             
             sender.setBackgroundImage(card.image, forState: UIControlState.Normal)
@@ -56,6 +61,17 @@ class ViewController: UIViewController {
                 if card == cards[openedCardIndex!] {
                     card.matched = true
                     nPairsFound++
+                    if nPairsFound == cards.count/2 {
+                        let winningAlert = UIAlertController(title: "Congratulations", message: "You won. Moves: \(moves)", preferredStyle: UIAlertControllerStyle.Alert)
+                        winningAlert.addAction(UIAlertAction(title: "New Game", style: UIAlertActionStyle.Default, handler: { action in
+                            self.newGame()
+                            }))
+                        winningAlert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { action in
+                    
+                        }))
+                        winningAlert.popoverPresentationController?.sourceView = sender as UIView
+                        presentViewController(winningAlert, animated: false, completion: nil)
+                    }
                 }
                 openedCardIndex = nil
             }
@@ -66,30 +82,23 @@ class ViewController: UIViewController {
         
         var shuffledCards : [MemoryItem] = []
         
-        var randomNumber : Int
-        for (var i = 0; i < 2*nPairs; i++) {
-            randomNumber = Int(arc4random_uniform(UInt32(2*nPairs-i)))
+        let nCards = cards.count
+        for (var i = 0; i < nCards; i++) { //improve: while still elements in cards array
+            let randomNumber = Int(arc4random_uniform(UInt32(cards.count-1)))
             shuffledCards.append(cards[randomNumber])
             cards.removeAtIndex(randomNumber)
         }
         cards = shuffledCards
     }
     
-    
-
-//    func compareAndEvaluateCards (card : MemoryItem) {
-//        if card.image != cards[openedCard].image {//CHECK (!)
-//            pairFound = false
-//            openedCard = nil
-//        }
-//        if card.image == cards[openedCard].image {//CHECK (!) as above
-//            openedCard = nil
-//            nPairsFound++
-//            if nPairsFound == nPairs {
-//                //DISPLAY WINNING MESSAGE; END OF GAME (ask if want to start new game etc
-//            }
-//        }
-//
-//    }
+    func newGame () {
+        for (var i = 0; i < cards.count; i++) {
+            buttons[i].setBackgroundImage(UIImage(named: "CardBackground"), forState: UIControlState.Normal)
+        }
+        shuffle()
+        moves = 0
+        movesLabel.text = String(0)
+        nPairsFound = 0
+    }
 }
 
