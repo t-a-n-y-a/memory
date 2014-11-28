@@ -27,6 +27,7 @@ class ViewController: UIViewController {
             cards.append(item)
             cards.append(item)
         }
+        shuffle()
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,10 +39,7 @@ class ViewController: UIViewController {
         assert(sender.tag < cards.count, "Fewer cards than buttons")
         if sender.tag < cards.count {
             let card = cards[sender.tag]
-//            if pairFound == false {
-//              sender.setBackgroundImage(UIImage(named: "CardBackground"), forState: UIControlState.Normal)
-////              set background image of Button of openedCard to CardBackgound
-//            }
+
             if openedCardIndex == nil {
                 // close all unmatched cards
                 for (var i = 0; i < cards.count; i++) {
@@ -49,7 +47,6 @@ class ViewController: UIViewController {
                         buttons[i].setBackgroundImage(UIImage(named: "CardBackground"), forState: UIControlState.Normal)
                     }
                 }
-                
             }
             
             sender.setBackgroundImage(card.image, forState: UIControlState.Normal)
@@ -65,9 +62,17 @@ class ViewController: UIViewController {
         }
     }
     
-    func shuffle () {
-        var randomNumber = Int(arc4random_uniform(9))
-        //create new array and take random element from cards array into new array, then replace cards with new array
+    func shuffle () { //can only be called after initialization of cards array in ViewDidLoad
+        
+        var shuffledCards : [MemoryItem] = []
+        
+        var randomNumber : Int
+        for (var i = 0; i < 2*nPairs; i++) {
+            randomNumber = Int(arc4random_uniform(UInt32(2*nPairs-i)))
+            shuffledCards.append(cards[randomNumber])
+            cards.removeAtIndex(randomNumber)
+        }
+        cards = shuffledCards
     }
     
     
