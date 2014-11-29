@@ -16,10 +16,10 @@ class ViewController: UIViewController {
     var cards : [MemoryItem] = []
     var openedCardIndex : Int?
     var moves : Int = 0 {
-    willSet(moves) {
-        movesLabel.text = String(moves)
+        didSet {
+            movesLabel.text = String(moves)
+        }
     }
-    }//setter (wenn die variable gesetzt wird soll der moves label text auch gesetzt werden)
     var gameStartTime : NSDate?
     
 
@@ -34,7 +34,6 @@ class ViewController: UIViewController {
             cards.append(item)
         }
         shuffle()
-//        movesLabel.text = String(moves)
     }
 
     override func didReceiveMemoryWarning() {
@@ -45,7 +44,7 @@ class ViewController: UIViewController {
         newGame()
     }
 
-    @IBAction func buttonSelect(sender: UIButton) {
+    @IBAction func buttonSelect(sender: UIButton) { //change name to buttonTapped
         assert(sender.tag < cards.count, "Fewer cards than buttons")
         if sender.tag < cards.count && openedCardIndex != sender.tag && cards[sender.tag].matched == false {
             if gameStartTime == nil {
@@ -54,50 +53,49 @@ class ViewController: UIViewController {
             
             let card = cards[sender.tag]
 
-            if openedCardIndex == nil {
-                closeAllUnmatched()
-                moves++
-//                movesLabel.text = String(moves)
-                openedCardIndex = sender.tag
-
-            } else { //two cards open
-                if card == cards[openedCardIndex!] {
+            if let cardIndex = openedCardIndex? { //second card opened
+                if card == cards[cardIndex] {
                     card.matched = true
-                    if winningMove() {
+                    if allMatched() {
                         var message = "You won. Moves: \(moves)"
 
-                        if gameStartTime != nil {
-                            let completionTime = Int(gameStartTime!.timeIntervalSinceNow*(-1))
+                        if let startTime = gameStartTime? {
+                            let completionTime = Int(startTime.timeIntervalSinceNow*(-1))
                             message += " Completion Time: \(completionTime) seconds"
                         }
                         
                         let winningAlert = UIAlertController(title: "Congratulations", message: message, preferredStyle: UIAlertControllerStyle.Alert)
+                        
+                        winningAlert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { action in
+                        }))
+                        
                         winningAlert.addAction(UIAlertAction(title: "New Game", style: UIAlertActionStyle.Default, handler: { action in
                             self.newGame()
-                            }))
-                        winningAlert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { action in
-                    
                         }))
                         presentViewController(winningAlert, animated: false, completion: nil)
                     }
                 }
                 openedCardIndex = nil
+            } else { //first card opened
+                closeAllUnmatched()
+                moves++
+                openedCardIndex = sender.tag
             }
             sender.setBackgroundImage(card.image, forState: UIControlState.Normal)
         }
     }
     
     func closeAllUnmatched() {
-        for (var i = 0; i < cards.count; i++) {
-            if cards[i].matched == false {
-                buttons[i].setBackgroundImage(UIImage(named: "CardBackground"), forState: UIControlState.Normal)
+        for (index, card) in enumerate(cards) {
+            if card.matched == false {
+                buttons[index].setBackgroundImage(UIImage(named: "CardBackground"), forState: UIControlState.Normal)
             }
         }
     }
     
-    func winningMove() -> Bool {
-        for (var i = 0; i < cards.count; i++) {
-            if cards[i].matched == false {
+    func allMatched() -> Bool {
+        for card in cards {
+            if card.matched == false {
                 return false
             }
         }
@@ -108,26 +106,24 @@ class ViewController: UIViewController {
         
         var shuffledCards : [MemoryItem] = []
         
-        do {
+        while !cards.isEmpty {
             let randomNumber = Int(arc4random_uniform(UInt32(cards.count))) //use swap instead; swap two elements
             shuffledCards.append(cards[randomNumber])
             cards.removeAtIndex(randomNumber)
-        } while cards.count > 0
+        }
         
         cards = shuffledCards
     }
     
     func newGame () {
-        for (var i = 0; i < cards.count; i++) {
-            cards[i].matched = false
+        for card in cards {
+            card.matched = false
         }
         closeAllUnmatched()
         shuffle()
         moves = 0
-//        movesLabel.text = String(moves)
         gameStartTime = nil
         openedCardIndex = nil
-        
     }
 }
 
