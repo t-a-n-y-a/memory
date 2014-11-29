@@ -101,7 +101,7 @@ class ViewController: UIViewController {
         var shuffledCards : [MemoryItem] = []
         
         do {
-            let randomNumber = Int(arc4random_uniform(UInt32(cards.count-1)))
+            let randomNumber = Int(arc4random_uniform(UInt32(cards.count)))
             shuffledCards.append(cards[randomNumber])
             cards.removeAtIndex(randomNumber)
         } while cards.count > 0
@@ -119,6 +119,7 @@ class ViewController: UIViewController {
         movesLabel.text = String(0)
         nPairsFound = 0
         firstCard = true
+        openedCardIndex = nil
     }
 }
 
