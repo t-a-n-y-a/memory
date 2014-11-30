@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet var buttons: [UIButton]!
     @IBOutlet weak var movesLabel: UILabel!
     
-    var cards : [MemoryItem] = []
+    final var cards : [MemoryItem] = []
     var openedCardIndex : Int?
     var moves : Int = 0 {
         didSet {
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
         newGame()
     }
 
-    @IBAction func buttonSelect(sender: UIButton) { //change name to buttonTapped
+    @IBAction func buttonTapped(sender: UIButton) { //change name to buttonTapped
         assert(sender.tag < cards.count, "Fewer cards than buttons")
         if sender.tag < cards.count && openedCardIndex != sender.tag && cards[sender.tag].matched == false {
             if gameStartTime == nil {
@@ -103,16 +103,10 @@ class ViewController: UIViewController {
     }
     
     func shuffle () { //can only be called after initialization of cards array in ViewDidLoad
-        
-        var shuffledCards : [MemoryItem] = []
-        
-        while !cards.isEmpty {
-            let randomNumber = Int(arc4random_uniform(UInt32(cards.count))) //use swap instead; swap two elements
-            shuffledCards.append(cards[randomNumber])
-            cards.removeAtIndex(randomNumber)
+        for (var i = 0; i < cards.count; i++) {
+            let randomNumber = Int(arc4random_uniform(UInt32(cards.count-i)))+i
+            swap(&cards[i], &cards[randomNumber])
         }
-        
-        cards = shuffledCards
     }
     
     func newGame () {

@@ -38,6 +38,7 @@
 		2B007D1B1A20D82500EF3074 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B007D1C1A20D82500EF3074 /* MemoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryTests.swift; sourceTree = "<group>"; };
 		2B007D281A27675000EF3074 /* MemoryItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryItem.swift; sourceTree = SOURCE_ROOT; };
+		2BDF35781A2B77FB007FE186 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +84,7 @@
 				2B007D061A20D82500EF3074 /* AppDelegate.swift */,
 				2B007D081A20D82500EF3074 /* ViewController.swift */,
 				2B007D0A1A20D82500EF3074 /* Main.storyboard */,
+				2BDF35781A2B77FB007FE186 /* MyPlayground.playground */,
 				2B007D0D1A20D82500EF3074 /* Images.xcassets */,
 				2B007D0F1A20D82500EF3074 /* LaunchScreen.xib */,
 				2B007D041A20D82500EF3074 /* Supporting Files */,
@@ -411,6 +413,7 @@
 				2B007D221A20D82500EF3074 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2B007D231A20D82500EF3074 /* Build configuration list for PBXNativeTarget "MemoryTests" */ = {
 			isa = XCConfigurationList;
@@ -419,6 +422,7 @@
 				2B007D251A20D82500EF3074 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
