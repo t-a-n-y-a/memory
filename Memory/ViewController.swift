@@ -33,7 +33,7 @@ class ViewController: UIViewController {
             cards.append(item)
             cards.append(item)
         }
-        shuffle()
+        cards.shuffle()
     }
 
     override func didReceiveMemoryWarning() {
@@ -102,19 +102,12 @@ class ViewController: UIViewController {
         return true
     }
     
-    func shuffle () { //can only be called after initialization of cards array in ViewDidLoad
-        for (var i = 0; i < cards.count; i++) {
-            let randomNumber = Int(arc4random_uniform(UInt32(cards.count-i)))+i
-            swap(&cards[i], &cards[randomNumber])
-        }
-    }
-    
     func newGame () {
         for card in cards {
             card.matched = false
         }
         closeAllUnmatched()
-        shuffle()
+        cards.shuffle()
         moves = 0
         gameStartTime = nil
         openedCardIndex = nil
