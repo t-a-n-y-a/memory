@@ -15,6 +15,9 @@
 		2B007D1D1A20D82500EF3074 /* MemoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B007D1C1A20D82500EF3074 /* MemoryTests.swift */; };
 		2B007D291A27675000EF3074 /* MemoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B007D281A27675000EF3074 /* MemoryItem.swift */; };
 		2BDF357A1A2B7EF1007FE186 /* TSArrayExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDF35791A2B7EF1007FE186 /* TSArrayExt.swift */; };
+		2BF6AF071A2B8C3100B5A309 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B007D081A20D82500EF3074 /* ViewController.swift */; };
+		2BF6AF081A2B8C3D00B5A309 /* MemoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B007D281A27675000EF3074 /* MemoryItem.swift */; };
+		2BF6AF091A2B8C4A00B5A309 /* TSArrayExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDF35791A2B7EF1007FE186 /* TSArrayExt.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -237,7 +240,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BF6AF071A2B8C3100B5A309 /* ViewController.swift in Sources */,
 				2B007D1D1A20D82500EF3074 /* MemoryTests.swift in Sources */,
+				2BF6AF091A2B8C4A00B5A309 /* TSArrayExt.swift in Sources */,
+				2BF6AF081A2B8C3D00B5A309 /* MemoryItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

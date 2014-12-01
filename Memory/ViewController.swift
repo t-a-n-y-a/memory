@@ -8,20 +8,51 @@
 
 import UIKit
 
+extension NSTimeInterval {
+    func formattedForMessage() -> String {
+        let secs = abs(Int(self))
+        let mins = secs/60
+        let hours = mins/60
+        
+        if hours >= 1 {
+            return "\(hours)h \(mins-hours*60)m \(secs-hours*60*60-((mins-hours*60)*60))s"
+        }
+        if mins >= 1 {
+            return "\(mins) min \(secs-hours*60*60-((mins-hours*60)*60)) sec"
+        }
+        return (secs == 1 ? "\(secs) second" : "\(secs) seconds")
+    }
+    
+    func formattedForTimer() -> String {
+        let secs = abs(Int(self))
+        let mins = secs/60
+        let hours = mins/60
+        
+        if hours >= 1 {
+            return "\(hours):\(mins-hours*60):\(secs-hours*60*60-((mins-hours*60)*60))"
+        }
+        if mins >= 1 {
+            return "\(mins):\(secs-hours*60*60-((mins-hours*60)*60))"
+        }
+        return "\(secs)"
+    }
+}
+
 class ViewController: UIViewController {
 
     @IBOutlet var buttons: [UIButton]!
     @IBOutlet weak var movesLabel: UILabel!
+    @IBOutlet weak var timeElapsedLabel: UILabel!
     
     final var cards : [MemoryItem] = []
     var openedCardIndex : Int?
+    var gameStartTime : NSDate?
+    var timer : NSTimer?
     var moves : Int = 0 {
         didSet {
             movesLabel.text = String(moves)
         }
     }
-    var gameStartTime : NSDate?
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +80,8 @@ class ViewController: UIViewController {
         if sender.tag < cards.count && openedCardIndex != sender.tag && cards[sender.tag].matched == false {
             if gameStartTime == nil {
                 gameStartTime = NSDate()
+                let aSelector : Selector = "updateTime"
+                timer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: aSelector, userInfo: nil, repeats: true)
             }
             
             let card = cards[sender.tag]
@@ -60,8 +93,9 @@ class ViewController: UIViewController {
                         var message = "You won. Moves: \(moves)"
 
                         if let startTime = gameStartTime? {
-                            let completionTime = Int(startTime.timeIntervalSinceNow*(-1))
-                            message += " Completion Time: \(completionTime) seconds"
+                            let completionTime = startTime.timeIntervalSinceNow.formattedForMessage()
+                            gameStartTime = nil //needed so that timer stops as well
+                            message += " Completion Time: \(completionTime)"
                         }
                         
                         let winningAlert = UIAlertController(title: "Congratulations", message: message, preferredStyle: UIAlertControllerStyle.Alert)
@@ -83,6 +117,14 @@ class ViewController: UIViewController {
             }
             sender.setBackgroundImage(card.image, forState: UIControlState.Normal)
         }
+    }
+    
+    func updateTime() {
+        if let startTime = gameStartTime? {
+            let timeElapsed = startTime.timeIntervalSinceNow.formattedForTimer()
+            timeElapsedLabel.text = "\(timeElapsed)"
+        }
+        
     }
     
     func closeAllUnmatched() {
@@ -111,6 +153,7 @@ class ViewController: UIViewController {
         moves = 0
         gameStartTime = nil
         openedCardIndex = nil
+        timeElapsedLabel.text = "0"
     }
 }
 
