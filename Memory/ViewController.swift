@@ -10,31 +10,41 @@ import UIKit
 
 extension NSTimeInterval {
     func formattedForMessage() -> String {
-        let secs = abs(Int(self))
-        let mins = secs/60
-        let hours = mins/60
         
-        if hours >= 1 {
-            return "\(hours)h \(mins-hours*60)m \(secs-hours*60*60-((mins-hours*60)*60))s"
+        let splittedInterval = self.splitHHMMSS()
+        
+        if splittedInterval.hours >= 1 {
+            return "\(splittedInterval.hours)h \(splittedInterval.mins)m \(splittedInterval.secs)s"
         }
-        if mins >= 1 {
-            return "\(mins) min \(secs-hours*60*60-((mins-hours*60)*60)) sec"
+        if splittedInterval.mins >= 1 {
+            return "\(splittedInterval.mins) min \(splittedInterval.secs) sec"
         }
-        return (secs == 1 ? "\(secs) second" : "\(secs) seconds")
+        return (splittedInterval.secs == 1 ? "\(splittedInterval.secs) second" : "\(splittedInterval.secs) seconds")
     }
     
     func formattedForTimer() -> String {
-        let secs = abs(Int(self))
-        let mins = secs/60
-        let hours = mins/60
         
-        if hours >= 1 {
-            return "\(hours):\(mins-hours*60):\(secs-hours*60*60-((mins-hours*60)*60))"
+        let splittedInterval = self.splitHHMMSS()
+        
+        if splittedInterval.hours >= 1 {
+            return String(format: "%02d:%02d:%02d", splittedInterval.hours, splittedInterval.mins, splittedInterval.secs)
         }
-        if mins >= 1 {
-            return "\(mins):\(secs-hours*60*60-((mins-hours*60)*60))"
+        if splittedInterval.mins >= 1 {
+            return String(format: "%02d:%02d", splittedInterval.mins, splittedInterval.secs)
         }
-        return "\(secs)"
+        return String(format: "00:%02d", splittedInterval.secs)
+    }
+    
+    func splitHHMMSS() -> (hours: Int, mins: Int, secs: Int) {
+        var secs = abs(Int(self))
+        
+        let hours = secs / 3600
+        secs = secs % 3600
+        
+        let mins = secs / 60
+        secs = secs % 60
+        
+        return (hours, mins, secs)
     }
 }
 
@@ -50,7 +60,7 @@ class ViewController: UIViewController {
     var timer : NSTimer?
     var moves : Int = 0 {
         didSet {
-            movesLabel.text = String(moves)
+            movesLabel.text = "\(moves)"
         }
     }
 
@@ -65,6 +75,8 @@ class ViewController: UIViewController {
             cards.append(item)
         }
         cards.shuffle()
+        updateTime()
+        moves = 0 //set movesLabel
     }
 
     override func didReceiveMemoryWarning() {
@@ -80,8 +92,7 @@ class ViewController: UIViewController {
         if sender.tag < cards.count && openedCardIndex != sender.tag && cards[sender.tag].matched == false {
             if gameStartTime == nil {
                 gameStartTime = NSDate()
-                let aSelector : Selector = "updateTime"
-                timer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: aSelector, userInfo: nil, repeats: true)
+                timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "updateTime", userInfo: nil, repeats: true)
             }
             
             let card = cards[sender.tag]
@@ -90,11 +101,13 @@ class ViewController: UIViewController {
                 if card == cards[cardIndex] {
                     card.matched = true
                     if allMatched() {
+                        timer?.invalidate()
+                        timer = nil
+                        
                         var message = "You won. Moves: \(moves)"
 
                         if let startTime = gameStartTime? {
                             let completionTime = startTime.timeIntervalSinceNow.formattedForMessage()
-                            gameStartTime = nil //needed so that timer stops as well
                             message += " Completion Time: \(completionTime)"
                         }
                         
@@ -120,11 +133,10 @@ class ViewController: UIViewController {
     }
     
     func updateTime() {
-        if let startTime = gameStartTime? {
-            let timeElapsed = startTime.timeIntervalSinceNow.formattedForTimer()
-            timeElapsedLabel.text = "\(timeElapsed)"
-        }
-        
+        let timeInterval : NSTimeInterval = (gameStartTime != nil ? gameStartTime!.timeIntervalSinceNow : 0)
+        let timeElapsed = timeInterval.formattedForTimer()
+        timeElapsedLabel.text = "\(timeElapsed)"
+//        NSLog("Time elapsed: %@", timeElapsed)
     }
     
     func closeAllUnmatched() {
@@ -153,7 +165,7 @@ class ViewController: UIViewController {
         moves = 0
         gameStartTime = nil
         openedCardIndex = nil
-        timeElapsedLabel.text = "0"
+        updateTime()
     }
 }
 
